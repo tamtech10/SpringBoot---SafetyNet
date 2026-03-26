@@ -21,5 +21,22 @@ public class FirestationService {
         this.personRepository = personRepository;
     }
 
+    //    Cette url doit retourner une liste des numéros de téléphone des résidents desservis par la caserne de pompiers
+    public List<String> phoneNumbers(String station) {
 
+        ArrayList<String> phone = new ArrayList<>(); //pravimo listu koja cuva nadjene brojeve
+        List<Person> personA = personRepository.findAllPersons();
+
+        for (Firestation firestation : firestationRepository.findAllFirestations()) {
+
+            if (firestation.getStation().equals(station)) {
+
+                for(Person person : personA) {
+                    if (person.getAddress().equals(firestation.getAddress())) {
+                        phone.add(person.getPhone());
+                    }
+                }
+            }
+        } return phone;
+    }
 }

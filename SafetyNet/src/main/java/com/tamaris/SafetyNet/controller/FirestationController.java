@@ -6,6 +6,7 @@ import com.tamaris.SafetyNet.service.FirestationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -14,12 +15,16 @@ import java.util.List;
 @RequestMapping
 public class FirestationController {
 
-    @Autowired
-    FirestationService firestationService;
 
-//    @GetMapping("/get")
-//    public List<Firestation> getFirestations() {
-//        return firestationService.getFirestations();
-//
-//    }
+    private final FirestationService firestationService;
+
+
+    public FirestationController(FirestationService firestationService) {
+        this.firestationService = firestationService;
+    }
+
+    @GetMapping("/phoneAlert")
+    public List<String> getPhoneNumber(@RequestParam(name="firestation") String firestation) {
+        return firestationService.phoneNumbers(firestation);
+    }
 }
