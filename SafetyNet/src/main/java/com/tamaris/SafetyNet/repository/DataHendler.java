@@ -18,7 +18,7 @@ public class DataHendler {
     private final Data data;
 
     public DataHendler(@Value("${data.filepath}") String filePath) { //gets the path to the json file
-        this.data = loadData(filePath); //Value annotation for the correct address
+        this.data = loadData(filePath);
         System.out.println("Data loaded: " + data);
     }
 

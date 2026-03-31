@@ -1,7 +1,6 @@
 package com.tamaris.SafetyNet.controller;
 
 
-import com.tamaris.SafetyNet.model.Person;
 import com.tamaris.SafetyNet.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

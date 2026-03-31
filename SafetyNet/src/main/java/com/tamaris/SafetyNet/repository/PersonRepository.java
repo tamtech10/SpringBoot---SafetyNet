@@ -1,12 +1,10 @@
 package com.tamaris.SafetyNet.repository;
 
-import com.tamaris.SafetyNet.model.Data;
+
+import com.tamaris.SafetyNet.dto.PersonDTO;
 import com.tamaris.SafetyNet.model.Person;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
