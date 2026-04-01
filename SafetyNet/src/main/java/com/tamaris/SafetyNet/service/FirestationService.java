@@ -60,10 +60,7 @@ public class FirestationService {
 
     public Map<String, Object> getInfoAboutPeople (String station) {
         //Dobijamo listu adresa koje pokriva ta stanica.
-        List<String> addressesFirestation = firestationRepository.findAllFirestations().stream() //uzima sve stanice iz JSON-a (lista svih firestations) i  pretvara tu listu u stream(kao pokretna traka u fabrici)
-                .filter(f -> f.getStation().equals(station))// filtrira — propušta samo stanice čiji broj odgovara traženom broju(f- jedna stanica i getStation kao njen broj)
-                .map(Firestation::getAddress) // transformiše — za svaku stanicu koja je prošla filter, uzmi samo njenu adresu
-                .collect(Collectors.toList()); //skuplja sve rezultate nazad u listu
+        List<String> addressesFirestation = getAddressesByStation(station); //pozivamo kreiranu metodu
 
         List<Person> persons = personRepository.findAllPersons().stream()
                 .filter(p -> addressesFirestation.contains(p.getAddress()))
@@ -97,14 +94,20 @@ public class FirestationService {
         return info;
     }
 
+//metoda koja pokazuje koje adrese pokriva neka stanica
+    public List<String> getAddressesByStation(String station) {
+        return firestationRepository.findAllFirestations().stream()//uzima sve stanice iz JSON-a (lista svih firestations) i  pretvara tu listu u stream(kao pokretna traka u fabrici)
+                .filter(f -> f.getStation().equals(station))// filtrira — propušta samo stanice čiji broj odgovara traženom broju(f- jedna stanica i getStation kao njen broj)
+                .map(Firestation::getAddress) // transformiše — za svaku stanicu koja je prošla filter, uzmi samo njenu adresu
+                .collect(Collectors.toList()); //skuplja sve rezultate nazad u listu
+    }
 
 
-
-    //Cette url doit retourner une liste de tous les foyers desservis par la caserne. Cette liste doit regrouper les
-    //personnes par adresse
-        public Map<String, List<FloodDTO>> getFloodInfo(List<String> stations) {
-
-        }
+//    //Cette url doit retourner une liste de tous les foyers desservis par la caserne. Cette liste doit regrouper les
+//    //personnes par adresse
+//        public Map<String, List<FloodDTO>> getFloodInfo(List<String> stations) {
+//
+//        }
 
 
 
