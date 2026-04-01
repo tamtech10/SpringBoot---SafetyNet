@@ -60,9 +60,11 @@ public class PersonService {
                 }
                 //Si je trouvais un dossier médical pour cette personne, alors je calcul son âge.
                 if (medicalrecord != null) {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy"); //our string into an object
-                    LocalDate birth = LocalDate.parse(medicalrecord.getBirthdate(), formatter);
-                    int age = calculateAge(birth);
+//                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy"); //our string into an object
+//                    LocalDate birth = LocalDate.parse(medicalrecord.getBirthdate(), formatter);
+//                    int age = calculateAge(birth);
+
+                    Integer age = getAge(p);
 
                     if(age <= 18) {
                         //ako imaju manje ili jednako kreiramo prvi map gde cemo ih skladistiti
@@ -89,9 +91,36 @@ public class PersonService {
         return results;
     }
 
-    //racunamo godine
-    private int calculateAge(LocalDate birthDate) {
-        return Period.between(birthDate, LocalDate.now()).getYears();
+//    //racunamo godine
+//    private int calculateAge(LocalDate birthDate) {
+//        return Period.between(birthDate, LocalDate.now()).getYears();
+//    }
+
+    //metoda kojom racunamo godine
+    public Integer getAge(Person person) {
+        //uzimamo listu na kojoj nam pisu godine
+        List<Medicalrecord> records = medicalrecordRepository.findAllMedicalrecords();
+        Medicalrecord medicalrecord = null;
+
+        //trazimo odgovarajuci karton
+        for (Medicalrecord mr : records) {
+            if(mr.getFirstName().equals(person.getFirstName()) && mr.getLastName().equals(person.getLastName())) {
+                medicalrecord = mr;
+                break;
+            }
+        }
+            if(medicalrecord == null || medicalrecord.getBirthdate() == null) {
+                return null;
+            }
+        //moramo da formatiramo podatke o rodjendanu jer su u formi String
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+
+            try {
+                LocalDate birthdate = LocalDate.parse(medicalrecord.getBirthdate(), formatter);
+                return Period.between(birthdate, LocalDate.now()).getYears();
+            } catch (Exception e) {
+                return null;
+            }
     }
 
 
