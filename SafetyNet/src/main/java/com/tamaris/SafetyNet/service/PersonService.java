@@ -2,6 +2,7 @@ package com.tamaris.SafetyNet.service;
 
 import com.tamaris.SafetyNet.dto.FireDTO;
 import com.tamaris.SafetyNet.dto.FloodDTO;
+import com.tamaris.SafetyNet.dto.firstLastNameDTO;
 import com.tamaris.SafetyNet.model.Firestation;
 import com.tamaris.SafetyNet.model.Medicalrecord;
 import com.tamaris.SafetyNet.model.Person;
@@ -169,6 +170,40 @@ public class PersonService {
 
         return new FireDTO(station, floodList); //vracamo novi dto sa nasim info
 
+    }
+
+
+    //Cette url doit retourner le nom, l'adresse, l'âge, l'adresse mail et les antécédents médicaux (médicaments,
+    //posologie, allergies) de chaque habitant
+
+    public List<firstLastNameDTO> getPersonInfo(String firstName, String lastName) {
+
+        //nadji sve osobe sa tim imenom i prezimenom
+        List<Person> per = personRepository.findAllPersons().stream()
+                .filter(p -> p.getFirstName().equals(firstName) && p.getLastName().equals(lastName))
+                .collect(Collectors.toList());
+
+        List<firstLastNameDTO> result = new ArrayList<>(); //Napravi praznu listu rezultata
+
+        for(Person p : per) {
+
+            Medicalrecord record = medicalrecordRepository.findByNameLastname(p.getFirstName(), p.getLastName());
+
+            Integer age = getAge(p);
+            if (age == null || record == null) continue;
+
+            firstLastNameDTO fLDTO = new firstLastNameDTO(
+                    p.getFirstName(),
+                    p.getLastName(),
+                    p.getAddress(),
+                    age,
+                    p.getEmail(),
+                    record.getMedications(),
+                    record.getAllergies()
+            );
+                result.add(fLDTO);
+
+        } return result;
     }
 
 

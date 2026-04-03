@@ -2,6 +2,7 @@ package com.tamaris.SafetyNet.controller;
 
 
 import com.tamaris.SafetyNet.dto.FireDTO;
+import com.tamaris.SafetyNet.dto.firstLastNameDTO;
 import com.tamaris.SafetyNet.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -33,5 +34,13 @@ public class PersonController {
     @GetMapping("/fire")
     public FireDTO getFireInfo(@RequestParam(name = "address") String address) {
         return personService.getFireInfo(address);
+    }
+
+    //Cette url doit retourner le nom, l'adresse, l'âge, l'adresse mail et les antécédents médicaux (médicaments,
+    //posologie, allergies) de chaque habitant
+    @GetMapping("/personInfo")
+    public List<firstLastNameDTO> getPersonInfo(@RequestParam (name = "firstName") String firstName,
+                                                @RequestParam (name = "lastName") String lastName) {
+        return personService.getPersonInfo(firstName, lastName);
     }
 }
