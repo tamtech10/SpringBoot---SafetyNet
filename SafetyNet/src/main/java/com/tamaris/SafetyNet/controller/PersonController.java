@@ -15,13 +15,13 @@ public class PersonController {
     @Autowired
     PersonService personService;
 
-
+    //*******Cette url doit retourner les adresses mail de tous les habitants de la ville(7)
     @GetMapping("/communityEmail")
     public List<String> getEmailFromPeopleInSpecificCity(@RequestParam(name="city") String city) {
         return personService.getEmailFromPeopleInSpecificCity(city);
     }
 
-    //Cette url doit retourner une liste d'enfants (tout individu âgé de 18 ans ou moins) habitant à cette adresse
+    //Cette url doit retourner une liste d'enfants (tout individu âgé de 18 ans ou moins) habitant à cette adresse(2)
     @GetMapping("/childAlert")
     public Map<String, Object> getInfoChild(@RequestParam(name = "address") String address) {
         return personService.getInfoChild(address);
