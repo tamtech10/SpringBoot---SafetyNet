@@ -131,7 +131,7 @@ public class FirestationService {
 
                 if (age == null || record == null) continue; //ako osoba nema medicinski dosije? record može biti null i onda će pući
 
-                FloodDTO dto = new FloodDTO(
+                FloodDTO dto = new FloodDTO( //Ovde kreiramo novi FloodDTO objekat i punimo ga svim podacima koje smo prikupili
                         per.getFirstName(),
                         per.getLastName(),
                         per.getPhone(),

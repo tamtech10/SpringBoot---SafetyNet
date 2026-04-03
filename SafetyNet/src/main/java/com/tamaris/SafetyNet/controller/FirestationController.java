@@ -43,4 +43,6 @@ public class FirestationController {
         List<String> stations = Arrays.asList(stationNb.split(","));
         return firestationService.getFloodInfo(stations);
     }
+
+
 }

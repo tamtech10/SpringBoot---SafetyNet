@@ -1,7 +1,11 @@
 package com.tamaris.SafetyNet.service;
 
+import com.tamaris.SafetyNet.dto.FireDTO;
+import com.tamaris.SafetyNet.dto.FloodDTO;
+import com.tamaris.SafetyNet.model.Firestation;
 import com.tamaris.SafetyNet.model.Medicalrecord;
 import com.tamaris.SafetyNet.model.Person;
+import com.tamaris.SafetyNet.repository.FirestationRepository;
 import com.tamaris.SafetyNet.repository.MedicalrecordRepository;
 import com.tamaris.SafetyNet.repository.PersonRepository;
 import org.springframework.stereotype.Service;
@@ -10,16 +14,19 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PersonService {
 
     private final PersonRepository personRepository;
     private final MedicalrecordRepository medicalrecordRepository;
+    private final FirestationRepository firestationRepository;
 
-    public PersonService(PersonRepository personRepository, MedicalrecordRepository medicalrecordRepository) {
+    public PersonService(PersonRepository personRepository, MedicalrecordRepository medicalrecordRepository, FirestationRepository firestationRepository) {
         this.personRepository = personRepository;
         this.medicalrecordRepository = medicalrecordRepository;
+        this.firestationRepository = firestationRepository;
     }
 
 
@@ -121,6 +128,47 @@ public class PersonService {
             } catch (Exception e) {
                 return null;
             }
+    }
+
+
+
+
+    //******Cette url doit retourner la liste des habitants vivant à l’adresse donnée ainsi que le numéro de la caserne
+    //de pompiers la desservant
+    public FireDTO getFireInfo(String address) {
+
+        String station = firestationRepository.findAllFirestations().stream() //preko adrese nadjemo broj stanice koja pokriva
+                .filter(f -> f.getAddress().equals(address))
+                .map(Firestation::getStation) //stream trazi String jer je jedna info
+                .findFirst()//stream moze da nadje vise rezultata, stream kaze uzmi prvi koji nadjes
+                .orElse(null); //ako vrednost ne postoji vrati null
+
+        List<Person> persons = personRepository.findAllPersons().stream()
+                .filter(p -> p.getAddress().equals(address)) //koristimo adresu koju imamo i skupljaju osobe koje zive na toj adresi
+                .collect(Collectors.toList());
+
+
+        List<FloodDTO> floodList = new ArrayList<>();
+
+        for (Person p : persons) {
+
+            Medicalrecord record = medicalrecordRepository.findByNameLastname(p.getFirstName(), p.getLastName());
+            Integer age = getAge(p);
+
+            if (age == null || record == null) continue;
+            FloodDTO fDTO = new FloodDTO(
+                    p.getFirstName(),
+                    p.getLastName(),
+                    p.getPhone(),
+                    age,
+                    record.getMedications(),
+                    record.getAllergies()
+            );
+               floodList.add(fDTO); //vracamo listu sa informacijama iz floodDTO
+        }
+
+        return new FireDTO(station, floodList); //vracamo novi dto sa nasim info
+
     }
 
 
