@@ -105,9 +105,58 @@ public class FirestationService {
 
 //    //Cette url doit retourner une liste de tous les foyers desservis par la caserne. Cette liste doit regrouper les
 //    //personnes par adresse
-//        public Map<String, List<FloodDTO>> getFloodInfo(List<String> stations) {
-//
-//        }
+        public Map<String, List<FloodDTO>> getFloodInfo(List<String> stations) {
+//            List<String> addressesFirestation = getAddressesByStation(station); //ne mozemo samo da pozovemo metodu ovako jer primamo listu stanica
+                                                                                    //i moramo tu listu da procesljamo(ovo je kada je prima samo broj jedne stanice
+
+            List<String> allAddresses = new ArrayList<>(); //imamo listu stanica,treba da prodjemo sve i skupimo sve adrese
+
+            for (String station : stations) {
+                List<String> addresses = getAddressesByStation(station);
+                allAddresses.addAll(addresses); // dodaj sve adrese te stanice u glavnu listu, addAll dodaje sve elemente jedne liste u drugu
+                                                //to je metoda klase ArrayList (odnosno List) u Javi
+            }
+
+            List<Person> persons = personRepository.findAllPersons().stream()
+                    .filter(p -> allAddresses.contains(p.getAddress()))
+                    .collect(Collectors.toList());
+
+            Map<String, List<FloodDTO>> result = new HashMap<>(); //imas listu person koje zive na odredjenim adresama
+            //pravis map gde skladistis rezultate jer treba da imas adresa: pa sve info o osobi(zato je lista u map)
+            for (Person per : persons) { //sada prolazis kroz svaku osobu i za nju pravis DTO(jer smo tu stavili samo info koje nam trebaju)
+
+                Integer age = personService.getAge(per);//uzimamo godine preko metode koju vec imamo
+
+                Medicalrecord record = medicalrecordRepository.findByNameLastname(per.getFirstName(), per.getLastName());//uzimamo ime i prezime preko metode koju vec imamo
+
+                if (age == null || record == null) continue; //ako osoba nema medicinski dosije? record može biti null i onda će pući
+
+                FloodDTO dto = new FloodDTO(
+                        per.getFirstName(),
+                        per.getLastName(),
+                        per.getPhone(),
+                        age,
+                        record.getMedications(), //ovde bi pukao kod da nismo stavili uslov pre dto
+                        record.getAllergies()
+                );
+
+                if (!result.containsKey(per.getAddress())) { //Dodajemo u mapu pod ključem adrese
+                    result.put(per.getAddress(), new ArrayList<>());
+                }
+                result.get(per.getAddress()).add(dto);
+            }
+                return result;
+            }
+
+
+
+
+
+
+
+
+
+        }
 
 
 
@@ -129,4 +178,4 @@ public class FirestationService {
 
 
 
-}
+
