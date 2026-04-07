@@ -148,9 +148,20 @@ public class FirestationService {
                 return result;
             }
 
+    //ajout d'un mapping caserne/adresse
+        public void addFirestation(Firestation firestation) {
+            firestationRepository.addFirestation(firestation);
+        }
 
+    //mettre à jour le numéro de la caserne de pompiers d'une adresse
+        public void updateFirestation(Firestation firestation) {
+            firestationRepository.updateFirestation(firestation);
+        }
 
-
+    //supprimer le mapping d'une caserne ou d'une adresse
+        public void deleteFirestation(String station) {
+            firestationRepository.deleteFirestation(station);
+        }
 
 
 

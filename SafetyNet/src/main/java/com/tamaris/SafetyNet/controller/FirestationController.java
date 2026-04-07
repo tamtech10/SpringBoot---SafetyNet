@@ -1,11 +1,9 @@
 package com.tamaris.SafetyNet.controller;
 
 import com.tamaris.SafetyNet.dto.FloodDTO;
+import com.tamaris.SafetyNet.model.Firestation;
 import com.tamaris.SafetyNet.service.FirestationService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -44,5 +42,22 @@ public class FirestationController {
         return firestationService.getFloodInfo(stations);
     }
 
+    //ajout d'un mapping caserne/adresse
+    @PostMapping("/firestation")
+    public void addFirestation(@RequestBody Firestation firestation) {
+        firestationService.addFirestation(firestation);
+    }
+
+    //mettre à jour le numéro de la caserne de pompiers d'une adresse
+    @PutMapping("/firestation")
+    public void updateFirestation(@RequestBody  Firestation firestation) {
+        firestationService.updateFirestation(firestation);
+    }
+
+    //supprimer le mapping d'une caserne ou d'une adresse
+    @DeleteMapping("/firestation")
+    public void deleteFirestation(@RequestParam String station) {
+        firestationService.deleteFirestation(station);
+    }
 
 }

@@ -2,9 +2,9 @@ package com.tamaris.SafetyNet.controller;
 
 
 import com.tamaris.SafetyNet.dto.FireDTO;
-import com.tamaris.SafetyNet.dto.firstLastNameDTO;
+import com.tamaris.SafetyNet.dto.FirstLastNameDTO;
+import com.tamaris.SafetyNet.model.Person;
 import com.tamaris.SafetyNet.service.PersonService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,8 +14,11 @@ import java.util.Map;
 @RequestMapping
 public class PersonController {
 
-    @Autowired
-    PersonService personService;
+    private final PersonService personService;
+
+    public PersonController(PersonService personService) {
+        this.personService = personService;
+    }
 
     //*******Cette url doit retourner les adresses mail de tous les habitants de la ville(7)
     @GetMapping("/communityEmail")
@@ -37,10 +40,28 @@ public class PersonController {
     }
 
     //Cette url doit retourner le nom, l'adresse, l'âge, l'adresse mail et les antécédents médicaux (médicaments,
-    //posologie, allergies) de chaque habitant
+    //posologie, allergies) de chaque habitant(6)
     @GetMapping("/personInfo")
-    public List<firstLastNameDTO> getPersonInfo(@RequestParam (name = "firstName") String firstName,
+    public List<FirstLastNameDTO> getPersonInfo(@RequestParam (name = "firstName") String firstName,
                                                 @RequestParam (name = "lastName") String lastName) {
         return personService.getPersonInfo(firstName, lastName);
+    }
+
+    //ajouter une nouvelle personne
+    @PostMapping("/person")
+    public void addPerson(@RequestBody Person person) {
+        personService.addPerson(person);
+    }
+
+    //mettre à jour une personne existante
+    @PutMapping("/person")
+    public void updatePerson(@RequestBody Person person) {
+        personService.updatePerson(person);
+    }
+
+    //supprimer une personne
+    @DeleteMapping("/person")
+    public void deletePerson(@RequestParam String firstName, @RequestParam String lastName) {
+        personService.deletePerson(firstName, lastName);
     }
 }

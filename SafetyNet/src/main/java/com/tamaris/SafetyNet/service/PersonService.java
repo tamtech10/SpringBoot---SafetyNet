@@ -2,7 +2,7 @@ package com.tamaris.SafetyNet.service;
 
 import com.tamaris.SafetyNet.dto.FireDTO;
 import com.tamaris.SafetyNet.dto.FloodDTO;
-import com.tamaris.SafetyNet.dto.firstLastNameDTO;
+import com.tamaris.SafetyNet.dto.FirstLastNameDTO;
 import com.tamaris.SafetyNet.model.Firestation;
 import com.tamaris.SafetyNet.model.Medicalrecord;
 import com.tamaris.SafetyNet.model.Person;
@@ -176,14 +176,14 @@ public class PersonService {
     //Cette url doit retourner le nom, l'adresse, l'âge, l'adresse mail et les antécédents médicaux (médicaments,
     //posologie, allergies) de chaque habitant
 
-    public List<firstLastNameDTO> getPersonInfo(String firstName, String lastName) {
+    public List<FirstLastNameDTO> getPersonInfo(String firstName, String lastName) {
 
         //nadji sve osobe sa tim imenom i prezimenom
         List<Person> per = personRepository.findAllPersons().stream()
                 .filter(p -> p.getFirstName().equals(firstName) && p.getLastName().equals(lastName))
                 .collect(Collectors.toList());
 
-        List<firstLastNameDTO> result = new ArrayList<>(); //Napravi praznu listu rezultata
+        List<FirstLastNameDTO> result = new ArrayList<>(); //Napravi praznu listu rezultata
 
         for(Person p : per) {
 
@@ -192,7 +192,7 @@ public class PersonService {
             Integer age = getAge(p);
             if (age == null || record == null) continue;
 
-            firstLastNameDTO fLDTO = new firstLastNameDTO(
+            FirstLastNameDTO fLDTO = new FirstLastNameDTO(
                     p.getFirstName(),
                     p.getLastName(),
                     p.getAddress(),
@@ -204,6 +204,22 @@ public class PersonService {
                 result.add(fLDTO);
 
         } return result;
+    }
+
+    //*****CRUD
+    //ajouter une nouvelle personne
+    public void addPerson(Person person) {
+        personRepository.addPerson(person);
+    }
+
+    //mettre à jour une personne existante
+    public void updatePerson(Person person) {
+        personRepository.updatePerson(person);
+    }
+
+    //supprimer une personne
+    public void deletePerson(String firstName, String lastName) {
+        personRepository.deletePerson(firstName,lastName);
     }
 
 

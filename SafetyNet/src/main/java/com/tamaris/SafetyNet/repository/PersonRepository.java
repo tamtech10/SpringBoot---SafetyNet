@@ -37,6 +37,30 @@ public class PersonRepository {
 //        return emails;
 //    }
 
+    //ajouter une nouvelle personne
+    public void addPerson(Person person) { //prima ceo person objekat jer dodajemo novi
+        dataHendler.getData().getPersons().add(person);
+    }
+
+    //mettre à jour une personne existante
+    public void updatePerson(Person person) { //radimo sa boucle for jer je tako lakse kada menjamo elemente u listi(sa sat menjamo element na odredjenoj poziciji)
+        List<Person> persons = dataHendler.getData().getPersons();
+        for(int p = 0; p < persons.size(); p ++) {
+            if(persons.get(p).getFirstName().equals(person.getFirstName())
+            && persons.get(p).getLastName().equals(person.getLastName())) {
+                persons.set(p, person);
+                break;
+            }
+        }
+    }
+
+    //supprimer une personne
+    public void deletePerson(String firstName, String lastName) { //string je zato sto ne prima citav objekat nego samo ime i prezime
+        //ovde opet koristimo stream jer brisemo pa nam je praktican
+        dataHendler.getData().getPersons()
+                .removeIf(p -> p.getFirstName().equals(firstName) && p.getLastName().equals(lastName));
+    }
+
 
 
 

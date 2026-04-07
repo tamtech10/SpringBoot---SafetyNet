@@ -1,6 +1,6 @@
 package com.tamaris.SafetyNet.dto;
 
-public class firstLastNameDTO {
+public class FirstLastNameDTO {
 
     private String firstName;
     private String lastName;
@@ -10,10 +10,10 @@ public class firstLastNameDTO {
     private String[] medications;
     private String[] allergies;
 
-    public firstLastNameDTO() {
+    public FirstLastNameDTO() {
     }
 
-    public firstLastNameDTO(String firstName, String lastName, String address, Integer age, String email, String[] medications, String[] allergies) {
+    public FirstLastNameDTO(String firstName, String lastName, String address, Integer age, String email, String[] medications, String[] allergies) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
